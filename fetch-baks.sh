@@ -1,10 +1,10 @@
 #!/bin/bash
 
-$JB="/JenkinsBackups"
-$username=$1
-$password=$2
-$ip=$3
-if [ -e $JB ]; then
+JB="/JenkinsBackups"
+username=$1
+password=$2
+ip=$3
+if [ ! -e $JB ]; then
 	mkdir /JenkinsBackups
 fi
 
