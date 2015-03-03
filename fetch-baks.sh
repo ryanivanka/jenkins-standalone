@@ -17,8 +17,8 @@ mount -t cifs -o username=$username,password=$password,domain=corp "//"$ip"/Jenk
 for file in $(ls "/JenkinsBackups"  -t)
 do
     if [ -d "/JenkinsBackups/"$file ];then
-                if [[ ${file:0:4} -eq "FULL" ]];then
-                        \cp -rf "/JenkinsBackups/"$file"/" .
+                if [[ ${file:0:4} == "FULL" ]];then
+                        \cp -rf /JenkinsBackups/$file/* .
                         break
                 fi
     fi
