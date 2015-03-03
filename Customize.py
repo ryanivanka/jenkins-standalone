@@ -6,12 +6,12 @@ import os
 import sys
 import paramiko
 
-rootPath=sys.argv[1]
-app=sys.argv[2]
+rootPath="/JenkinsBackups"
+app=sys.argv[1]
 
-HOST="10.27.16.167"
-USERNAME="root"
-PASSWD="mstr123"
+HOST=sys.argv[2]
+USERNAME=sys.argv[3]
+PASSWD=sys.argv[4]
 PORT="22"
 
 #change backup location for new App
