@@ -42,7 +42,7 @@ def notifyUpdateHaproxy():
             if line.find("listen "+app+"-" ) > -1:
                 print line
                 ports=line.split('-')
-                appPort=ports[1]
+                appPort=ports[-1]
                 break
         ssh.close()
         return appPort
