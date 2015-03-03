@@ -1,9 +1,26 @@
 #Change Jenkins master url for new APP
-#Change backup location for new APP
+
 
 #Read APP info first.
-from xml.dom import minidom
-doc=minidom.parse("thinBackup.xml")
-root=doc.documentElement
-backupPath=root.getElementsByTagName('backupPath')
-print("backup path is,", backupPath.nodeValue )
+import xml.etree.ElementTree as ET
+import os
+import sys
+
+path=sys.argv[1]
+#change backup location for new App
+def modifyBackupPath(path):
+    tree=ET.parse("thinBackup.xml")
+    root=tree.getroot()
+    backupPath=root.find('backupPath')
+    print "backup path is: "+backupPath.text
+
+    backupPath.text=path
+    tree.write('tmp.xml')
+    os.remove('thinBackup.xml')
+    os.rename('tmp.xml', 'thinBackup.xml')
+
+def main():
+    modifyBackupPath(path)
+
+if __name__=='__main__':
+    main()
