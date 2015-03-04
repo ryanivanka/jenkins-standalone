@@ -11,9 +11,11 @@ if [ ! -e $rootPath ]; then
 fi
 
 if grep -qs $rootPath /proc/mounts; then
-        umount -l $rootPath
+#        umount -l $rootPath
+         echo "no need to mount"
+else
+         mount -t cifs -o username=$username,password=$password,domain=corp "//"$ip"/JenkinsShare" /JenkinsBackups
 fi
-mount -t cifs -o username=$username,password=$password,domain=corp "//"$ip"/JenkinsShare" /JenkinsBackups
 
 #copy the backups
 for file in $(ls "/JenkinsBackups/"$location  -t)

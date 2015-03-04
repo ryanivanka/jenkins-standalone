@@ -5,6 +5,7 @@ from lxml import etree as ET
 import os
 import sys
 import paramiko
+import socket
 
 rootPath="/JenkinsBackups"
 app=sys.argv[1]
@@ -12,19 +13,20 @@ app=sys.argv[1]
 HOST=sys.argv[2]
 USERNAME=sys.argv[3]
 PASSWD=sys.argv[4]
-PORT="22"
+PORT=22
 
 #change backup location for new App
 def modifyBackupPath(path):
     tree=ET.parse("thinBackup.xml")
     root=tree.getroot()
     backupPath=root.find('backupPath')
-    print "backup path is: "+backupPath.text
+    print "old backup path is: "+backupPath.text
 
     backupPath.text=path
     tree.write('tmp.xml', encoding='utf-8', xml_declaration=True)
     os.remove('thinBackup.xml')
     os.rename('tmp.xml', 'thinBackup.xml')
+    print "new backup path is: "+path
 
 # notify to update ha proxy and get port info.
 def notifyUpdateHaproxy():
@@ -46,20 +48,26 @@ def notifyUpdateHaproxy():
                 break
         ssh.close()
         return appPort
-    except:
-        print stderr
+    except paramiko.SSHException, e:
+        print "Password is invalid:" , e
+    except paramiko.AuthenticationException:
+        print "Authentication failed for some reason"
+    except socket.error, e:
+        print "Socket connection failed:", e
 
-#update master url info 
+
+#update master url info
 def modifyMasterURL(HOST, appPort):
     tree=ET.parse("jenkins.model.JenkinsLocationConfiguration.xml")
     root=tree.getroot()
     jenkinsURL=root.find('jenkinsUrl')
-    print "jenkins URL is :"+ jenkinsURL.text
+    print "old jenkins URL is :"+ jenkinsURL.text
 
-    jenkinsURL.text="http://"+HOST+":"+appPort+"/"
+    jenkinsURL.text="http://"+str(HOST)+":"+str(appPort)+"/"
     tree.write('tmp.xml', encoding='utf-8', xml_declaration=True)
     os.remove('jenkins.model.JenkinsLocationConfiguration.xml')
     os.rename('tmp.xml','jenkins.model.JenkinsLocationConfiguration.xml')
+    print "new jenkins URL is :"+ jenkinsURL.text
 
 def main():
     modifyBackupPath("%s/%s" %(rootPath,app))
@@ -68,3 +76,4 @@ def main():
 
 if __name__=='__main__':
     main()
+
