@@ -20,10 +20,15 @@ fi
 #copy the backups
 for file in $(ls "/JenkinsBackups/"$location  -t)
 do
-    if [ -d "/JenkinsBackups/"$location/$file ];then
+    backupLocation="/JenkinsBackups/"$location/$file
+    if [ -d $backupLocation ];then
                 if [[ ${file:0:4} == "FULL" ]];then
                         echo $file
-                        \cp -rf /JenkinsBackups/$location/$file/* .
+                        for f in $(ls $backupLocation)
+                        do
+                            \cp -rf "$backupLocation/$f" .
+                        done
+                        #\cp -rf $backupLocation/* .
                         break
                 fi
     fi
