@@ -84,13 +84,14 @@ def notifyUpdateHaproxy(app, jnlpPort):
                 appFound=False
             temp.write(line)
         if needAdd:
-            temp.write('''listen jnlp-%s
+            temp.write('''
+listen jnlp-%s
   bind 0.0.0.0:%s
   mode tcp
   option tcplog
   balance leastconn
   server %s %s:%s check
- ''' %(app,jnlpPort,app,routeIP,jnlpPort))
+''' %(app,jnlpPort,app,routeIP,jnlpPort))
         temp.flush()
         shutil.copy(temp.name,'jnlp_haproxy_local.cfg')
         temp.close()
