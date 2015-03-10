@@ -2,6 +2,14 @@
 Run a Jenkins master on Apache Mesos and Marathon.
 
 <http://rogerignazio.com/blog/scaling-jenkins-mesos-marathon>.
+## APP Command
+```
+git clone https://github.com/XiaokunHou/jenkins-standalone
+&& cd jenkins-standalone && chmod 777 fetch-baks.sh 
+&& ./fetch-baks.sh username password ip folder 
+&& python customize.py appname haproxy_ip username password 
+&& ./jenkins-standalone.sh -z $(cat /etc/mesos/zk) -r localhost
+```
 
 ## Usage
 `jenkins-standalone.sh` takes two arguments:
