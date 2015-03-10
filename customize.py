@@ -46,19 +46,19 @@ def notifyUpdateHaproxy(app, jnlpPort):
 
         # find haproxy port and dest ip
         outs=stdout.readlines()
-	appFound=False
+        appFound=False
         for line in outs:
             line=line.strip()
             if line.find("listen "+app+"-" ) > -1:
                 print line
                 ports=line.split('-')
                 appPort=ports[-1]
-		appFound=True
-		continue
+                appFound=True
+                continue
             if line.find('server ')>-1 and appFound==True:
-		print line
-		routeIP=line.strip().split(' ')[2].split(':')[0]
-		break
+                print line
+                routeIP=line.strip().split(' ')[2].split(':')[0]
+                break
         
         # generate the new jnlp haproxy config file
         ftp=ssh.open_sftp()
