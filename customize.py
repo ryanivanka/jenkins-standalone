@@ -41,7 +41,7 @@ def notifyUpdateHaproxy(app, jnlpPort):
         ssh.connect(hostname=HOST, username=USERNAME, password=PASSWD, port=PORT)
 
         # refresh haproxy config and find the new port for jenkins master
-        stdin, stdout, stderr = ssh.exec_command('/data/haproxy/haproxy_marathon_bridge logged refresh_system_haproxy localhost:8080')
+        stdin, stdout, stderr = ssh.exec_command('/usr/local/bin/haproxy-marathon-bridge logged refresh_system_haproxy $(cat /etc/haproxy-marathon-bridge/marathons)')
         stdin,stdout,sterr=ssh.exec_command('cat /etc/haproxy/haproxy.cfg')
 
         # find haproxy port and dest ip
@@ -99,7 +99,7 @@ listen jnlp-%s
         ftp.close()
 
         # refresh haproxy config and find the new port for jenkins master
-        stdin, stdout, stderr = ssh.exec_command('/data/haproxy/haproxy_marathon_bridge logged refresh_system_haproxy localhost:8080')
+        stdin, stdout, stderr = ssh.exec_command('/usr/local/bin/haproxy-marathon-bridge logged refresh_system_haproxy $(cat /etc/haproxy-marathon-bridge/marathons)')
 
         ssh.close()
         return appPort
