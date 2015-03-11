@@ -10,7 +10,23 @@ git clone https://github.com/XiaokunHou/jenkins-standalone
 && python customize.py appname haproxy_ip username password 
 && ./jenkins-standalone.sh -z $(cat /etc/mesos/zk) -r localhost
 ```
+Copy backups form sharefolder,
+```
+./fetch-baks.sh username password ip folder
+```
+username&password: Used to access share folder.
 
+ip: Machine ip to store backups
+
+Do customization on new Jenkins master
+```
+python customize.py appname haproxy_ip username password 
+```
+appname: Application name
+
+haproxy_ip: ip info for haproxy machine
+
+username&password: used to access haproxy machine.
 ## Usage
 `jenkins-standalone.sh` takes two arguments:
   - ZooKeeper URL
