@@ -1,5 +1,5 @@
 #!/bin/bash
-set -o errexit -o nounset -o pipefail
+#set -o errexit -o nounset -o pipefail
 function -h {
 cat <<USAGE
  USAGE: $name <marathon host:port>+
@@ -31,12 +31,27 @@ function main {
   config "$@"
 }
 
+function attach {
+  match=$(/bin/grep "^listen $2" $1) 2>&1 1>>/tmp/errors
+  if [ -n "$match" ]
+    then
+    cat /etc/haproxy/jnlp/$2 >> $1
+  else
+    /bin/rm -f /etc/haproxy/jnlp/$2 2>&1 1>>/tmp/errors
+  fi
+}
+
 function refresh_system_haproxy {
   config "$@" > /tmp/"$conf_file"
-  if [ -f "/etc/haproxy/$jnlp_conf_file" ]
-  then cat /etc/haproxy/$jnlp_conf_file >> /tmp/"$conf_file"
-  else touch /etc/haproxy/$jnlp_conf_file
-  fi
+
+  for file in /etc/haproxy/jnlp/*
+    do
+    if [[ $file != "/etc/haproxy/jnlp/*" ]]
+      then
+      fileName=${file##*/}
+      attach /tmp/"$conf_file" $fileName
+    fi
+  done
 
   if ! diff -q /tmp/"$conf_file" /etc/haproxy/"$conf_file" >&2
   then
