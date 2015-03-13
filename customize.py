@@ -62,29 +62,32 @@ def notifyUpdateHaproxy(app, jnlpPort):
         
         # generate the new jnlp haproxy config file
         ftp=ssh.open_sftp()
-        ftp.get('/etc/haproxy/jnlp_haproxy.cfg', 'jnlp_haproxy_local.cfg')
+        #ftp.get('/etc/haproxy/jnlp_haproxy.cfg', 'jnlp_haproxy_local.cfg')
         temp=tempfile.NamedTemporaryFile()
-        infile=open('jnlp_haproxy_local.cfg', 'r+')
-        infile.seek(0)
-        file_content_list=infile.readlines()
-        needAdd=True
-        appFound=False
-        for line in file_content_list:
-            if line.strip().find('listen jnlp-'+app)>-1:
+        #infile=open('jnlp_haproxy_local.cfg', 'r+')
+        #infile.seek(0)
+        #file_content_list=infile.readlines()
+        #needAdd=True
+        #appFound=False
+        #for line in file_content_list:
+        #    if line.strip().find('listen jnlp-'+app)>-1:
         #       print line.split(' ')[1:]
-                appFound=True
-                needAdd=False
-                temp.write(line)
-                continue
-            if line.find(':')>-1 and appFound==True:
-                line=line.strip('\n').split(':')[0]+':'+jnlpPort+'\n'
-                temp.write(line)
-                continue
-            if line.find('listen ')>-1:
-                appFound=False
-            temp.write(line)
-        if needAdd:
-            temp.write('''
+        #        appFound=True
+        #        needAdd=False
+        #        temp.write(line)
+        #        continue
+        #    if line.find(':')>-1 and appFound==True:
+        #        
+        #        if line.find('0.0.0.0')>-1
+        #            line=line.strip('\n').split(':')[0]+':'+jnlpPort+'\n'
+		#			
+        #        temp.write(line)
+        #        continue
+        #    if line.find('listen ')>-1:
+        #        appFound=False
+        #   temp.write(line)
+        #if needAdd:
+        temp.write('''
 listen jnlp-%s
   bind 0.0.0.0:%s
   mode tcp
@@ -93,9 +96,9 @@ listen jnlp-%s
   server %s %s:%s check
 ''' %(app,jnlpPort,app,routeIP,jnlpPort))
         temp.flush()
-        shutil.copy(temp.name,'jnlp_haproxy_local.cfg')
+        #shutil.copy(temp.name,'jnlp_haproxy_local.cfg')        
+        ftp.put(temp.name,'/etc/haproxy/jnlp/'+app)
         temp.close()
-        ftp.put('jnlp_haproxy_local.cfg','/etc/haproxy/jnlp_haproxy.cfg')
         ftp.close()
 
         # refresh haproxy config and find the new port for jenkins master
