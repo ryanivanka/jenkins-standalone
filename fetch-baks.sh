@@ -1,5 +1,7 @@
 #!/bin/bash
 #mount backups first.
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
 rootPath="/JenkinsBackups"
 username=$1
 password=$2
@@ -34,3 +36,4 @@ do
     fi
 done
 echo "restore is done..."
+IFS=$SAVEIFS
