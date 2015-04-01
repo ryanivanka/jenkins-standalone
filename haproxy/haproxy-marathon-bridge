@@ -36,7 +36,7 @@ function attach {
   if [ -n "$match" ]
     then
     cat /etc/haproxy/jnlp/$2 >> $1
-  else
+  #else
     #/bin/rm -f /etc/haproxy/jnlp/$2 2>&1 1>>/tmp/errors
   fi
 }
