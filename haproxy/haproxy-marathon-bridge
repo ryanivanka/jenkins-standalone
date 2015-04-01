@@ -37,11 +37,12 @@ function attach {
     then
     cat /etc/haproxy/jnlp/$2 >> $1
   else
-    /bin/rm -f /etc/haproxy/jnlp/$2 2>&1 1>>/tmp/errors
+    #/bin/rm -f /etc/haproxy/jnlp/$2 2>&1 1>>/tmp/errors
   fi
 }
 
 function refresh_system_haproxy {
+  echo `date`":Refresh haproxy config." >> /tmp/haproxy.log
   config "$@" > /tmp/"$conf_file"
 
   for file in /etc/haproxy/jnlp/*
@@ -56,6 +57,7 @@ function refresh_system_haproxy {
   if ! diff -q /tmp/"$conf_file" /etc/haproxy/"$conf_file" >&2
   then
     msg "Found changes. Sending reload request to HAProxy..."
+    echo `date` ":Haproxy service restarted." >> /tmp/haproxy.log
     cat /tmp/"$conf_file" > /etc/haproxy/"$conf_file"
     if [[ -f /etc/init/haproxy.conf ]]
     then reload haproxy ## Upstart
@@ -125,9 +127,9 @@ defaults
   log            global
   retries             3
   maxconn          2000
-  timeout connect  5000
-  timeout client  50000
-  timeout server  50000
+  timeout connect  500000
+  timeout client  5000000
+  timeout server  5000000
 listen stats
   bind 127.0.0.1:9090
   balance
