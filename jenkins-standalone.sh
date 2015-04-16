@@ -9,7 +9,6 @@ JENKINS_PLUGINS=(\
     "credentials/1.18"           \		
     "email-ext/2.39"             \		
     "git/2.3.1"                  \		
-    "git-client/1.12.0"          \		
     "greenballs/1.14"            \		
     "hipchat/0.1.8"              \		
     "job-dsl/1.27"               \		
