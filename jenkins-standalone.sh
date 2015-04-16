@@ -5,24 +5,7 @@ set -e
 JENKINS_VERSION="1.580.2"
 
 # List of Jenkins plugins, in the format "${PLUGIN_NAME}/${PLUGIN_VERSION}"
-JENKINS_PLUGINS=(\
-    "credentials/1.18"           \
-    "email-ext/2.39"             \
-    "git/2.3.1"                  \
-    "git-client/1.12.0"          \
-    "greenballs/1.14"            \
-    "hipchat/0.1.8"              \
-    "job-dsl/1.27"               \
-    "logstash/1.0.3"             \
-    "metadata/1.1.0b"            \
-    "mesos/0.5.0"                \
-    "monitoring/1.54.0"          \
-    "parameterized-trigger/2.25" \
-    "saferestart/0.3"            \
-    "scm-api/0.2"                \
-    "script-security/1.12"       \
-    "ssh-credentials/1.10"       \
-    "token-macro/1.10"           \
+JENKINS_PLUGINS=(
 )
 
 JENKINS_WAR_MIRROR="http://mirrors.jenkins-ci.org/war-stable"
