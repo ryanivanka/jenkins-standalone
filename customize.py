@@ -154,7 +154,8 @@ def main():
     jnlpPort=modifySlaveAgentPort()
     print "jnlp port should be", jnlpPort  
     appPort= notifyUpdateHaproxy(app, jnlpPort)
-    modifyMasterURL(HOST, appPort)
+    #do not change master url if not use haproxy
+    #modifyMasterURL(HOST, appPort)
 
 
 if __name__=='__main__':
