@@ -48,6 +48,7 @@ def notifyUpdateHaproxy(app, jnlpPort):
         # find haproxy port and dest ip
         outs=stdout.readlines()
         #appFound=False
+        appPort=0
         for line in outs:
             line=line.strip()
             if line.find("listen "+app+"-" ) > -1:
