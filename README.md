@@ -46,7 +46,7 @@ cd jenkins-standalone
 ```
 
 You can also use the Marathon API to create apps. There is an example
-`jenkins-standalone.json` in the `examples/` directory.
+`jenkins-standalone.json` in the `examples/` directory .
 
 ```
 curl -i -H 'Content-Type: application/json' -d @jenkins-standalone.json marathon.example.com:8080/v2/apps
