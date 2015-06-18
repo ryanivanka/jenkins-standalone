@@ -25,7 +25,7 @@
       <description></description>
       <frameworkName>Jenkins Scheduler</frameworkName>
       <checkpoint>false</checkpoint>
-      <onDemandRegistration>false</onDemandRegistration>
+      <onDemandRegistration>true</onDemandRegistration>
       <slaveInfos>
         <org.jenkinsci.plugins.mesos.MesosSlaveInfo>
           <slaveCpus>0.1</slaveCpus>
