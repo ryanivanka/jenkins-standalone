@@ -30,7 +30,7 @@
         <org.jenkinsci.plugins.mesos.MesosSlaveInfo>
           <slaveCpus>0.1</slaveCpus>
           <slaveMem>30</slaveMem>
-          <executorCpus>0.1</executorCpus>
+          <executorCpus>0.5</executorCpus>
           <maxExecutors>1</maxExecutors>
           <executorMem>900</executorMem>
           <remoteFSRoot>jenkins</remoteFSRoot>
@@ -52,7 +52,7 @@
         <org.jenkinsci.plugins.mesos.MesosSlaveInfo>
           <slaveCpus>0.1</slaveCpus>
           <slaveMem>30</slaveMem>
-          <executorCpus>0.1</executorCpus>
+          <executorCpus>0.5</executorCpus>
           <maxExecutors>1</maxExecutors>
           <executorMem>900</executorMem>
           <remoteFSRoot>jenkins</remoteFSRoot>
