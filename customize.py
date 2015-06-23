@@ -151,9 +151,9 @@ def modifySlaveAgentPort():
 
 def main():
     modifyBackupPath("%s/%s" %(rootPath,app))
-    jnlpPort=modifySlaveAgentPort()
-    print "jnlp port should be", jnlpPort  
-    appPort= notifyUpdateHaproxy(app, jnlpPort)
+    #jnlpPort=modifySlaveAgentPort()
+    #print "jnlp port should be", jnlpPort  
+    #appPort= notifyUpdateHaproxy(app, jnlpPort)
     #do not change master url if not use haproxy
     #modifyMasterURL(HOST, appPort)
 
