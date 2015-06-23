@@ -13,9 +13,9 @@ import socket
 rootPath="/JenkinsBackups"
 app=sys.argv[1]
 
-HOST=sys.argv[2]
-USERNAME=sys.argv[3]
-PASSWD=sys.argv[4]
+#HOST=sys.argv[2]
+#USERNAME=sys.argv[3]
+#PASSWD=sys.argv[4]
 PORT=22
 
 #change backup location for new App
