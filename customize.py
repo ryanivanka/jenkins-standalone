@@ -4,7 +4,7 @@
 from lxml import etree as ET
 import os
 import sys
-import paramiko
+#import paramiko
 import socket
 import tempfile
 import shutil
