@@ -25,14 +25,26 @@ def modifyBackupPath(path):
     backupPath=root.find('backupPath')
     print "old backup path is: "+backupPath.text
 
-
     backupPath.text=path
     temp=tempfile.NamedTemporaryFile()
     tree.write(temp.name, encoding='utf-8', xml_declaration=True)
     shutil.copy(temp.name,'thinBackup.xml')
     temp.close()
     print "new backup path is: "+path
+    
+def modifyURL():
+    tree=ET.parse("jenkins.model.JenkinsLocationConfiguration.xml")
+    root=tree.getroot()
+    oldURL=root.find('jenkinsUrl')
+    print "old jenkins url is: "+oldURL.text
 
+    oldURL.text="_MAGIC_JENKINS_URL"
+    temp=tempfile.NamedTemporaryFile()
+    tree.write(temp.name, encoding='utf-8', xml_declaration=True)
+    shutil.copy(temp.name,'jenkins.model.JenkinsLocationConfiguration.xml')
+    temp.close()
+    print "new jenkins url is: _MAGIC_JENKINS_URL"
+    
 # notify to update ha proxy and get master url port info.
 # update the jnlp port for haproxy
 def notifyUpdateHaproxy(app, jnlpPort):
@@ -151,6 +163,7 @@ def modifySlaveAgentPort():
 
 def main():
     modifyBackupPath("%s/%s" %(rootPath,app))
+    modifyURL()
     #jnlpPort=modifySlaveAgentPort()
     #print "jnlp port should be", jnlpPort  
     #appPort= notifyUpdateHaproxy(app, jnlpPort)
