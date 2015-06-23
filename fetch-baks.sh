@@ -3,20 +3,23 @@
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 rootPath="/JenkinsBackups"
-username=$1
-password=$2
-ip=$3
+#username=$1
+#password=$2
+#ip=$3
 #where to backup
-location=$4
+location=$1
+#location=$4
 if [ ! -e $rootPath ]; then
         mkdir /JenkinsBackups
 fi
 
 if grep -qs $rootPath /proc/mounts; then
 #        umount -l $rootPath
-         echo "no need to mount"
+         echo "no need to mount..."
 else
-         mount -t cifs -o username=$username,password=$password,domain=corp "//"$ip"/JenkinsShare" /JenkinsBackups
+         # all backus are stored in docker-registry
+         mount docker-registry1:/JenkinsShare /JenkinsBackups
+         #mount -t cifs -o username=$username,password=$password,domain=corp "//"$ip"/JenkinsShare" /JenkinsBackups
 fi
 
 #copy the backups
