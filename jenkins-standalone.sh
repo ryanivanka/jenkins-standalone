@@ -32,10 +32,17 @@ while [[ $# > 1 ]]; do
     case $key in
         -z|--zookeeper)
             ZOOKEEPER_PATHS="$1"
+            echo "Get zookeeper=$1"
             shift
             ;;
         -r|--redis-host)
             REDIS_HOST="$1"
+            echo "Get redis_host=$1"
+            shift
+            ;;
+        -dbg|--debug)
+            JVM_DEBUG="$1"
+            echo "Get jvm_debug_options=$1"
             shift
             ;;
         *)
@@ -46,17 +53,20 @@ while [[ $# > 1 ]]; do
 done
 
 # Jenkins WAR file
-if [[ ! -f "jenkins.war" ]]; then
+if [[ ! -f "jenkins${JENKINS_VERSION}.war" ]]; then
+    echo "start wget jenkins.war..."
     wget -nc "${JENKINS_WAR_MIRROR}/${JENKINS_VERSION}/jenkins.war"
+    echo "finish wget jenkins.war"
 fi
 
 # Jenkins plugins
-[[ ! -d "plugins" ]] && mkdir "plugins"
-for plugin in ${JENKINS_PLUGINS[@]}; do
-    IFS='/' read -a plugin_info <<< "${plugin}"
-    plugin_path="${plugin_info[0]}/${plugin_info[1]}/${plugin_info[0]}.hpi"
-    wget -nc -P plugins "${JENKINS_PLUGINS_MIRROR}/${plugin_path}"
-done
+echo "jenkins plugin is in plugin folder by default"
+#[[ ! -d "plugins" ]] && mkdir "plugins"
+#for plugin in ${JENKINS_PLUGINS[@]}; do
+#    IFS='/' read -a plugin_info <<< "${plugin}"
+#    plugin_path="${plugin_info[0]}/${plugin_info[1]}/${plugin_info[0]}.hpi"
+#    wget -nc -P plugins "${JENKINS_PLUGINS_MIRROR}/${plugin_path}"
+#done
 
 # Jenkins config files
 sed -i "s!_MAGIC_ZOOKEEPER_PATHS!${ZOOKEEPER_PATHS}!" config.xml
@@ -65,12 +75,31 @@ sed -i "s!_MAGIC_JENKINS_URL!http://${HOST}:${PORT}!" jenkins.model.JenkinsLocat
 
 # Start the master
 export JENKINS_HOME="$(pwd)"
-java -jar jenkins.war \
-    -Djava.awt.headless=true \
-    --webroot=war \
-    --httpPort=${PORT} \
-    --ajp13Port=-1 \
-    --httpListenAddress=0.0.0.0 \
-    --ajp13ListenAddress=127.0.0.1 \
-    --preferredClassLoader=java.net.URLClassLoader \
-    --logfile=../jenkins.log
+if [[ -z "$JVM_DEBUG" ]]; then
+    echo "Start Jenkins"
+    java -jar jenkins"${JENKINS_VERSION}".war \
+        -Djava.awt.headless=true \
+        --webroot=war \
+        --httpPort=${PORT} \
+        --ajp13Port=-1 \
+        --httpListenAddress=0.0.0.0 \
+        --ajp13ListenAddress=127.0.0.1 \
+        --preferredClassLoader=java.net.URLClassLoader \
+        --logfile=../jenkins.log
+else
+    echo "Start Jenkins in debug mode, -Xdebug -Xrunjdwp: "
+    echo "$JVM_DEBUG"
+    java -jar jenkins"${JENKINS_VERSION}".war \
+        -Djava.awt.headless=true \
+        --webroot=war \
+        --httpPort=${PORT} \
+        --ajp13Port=-1 \
+        --httpListenAddress=0.0.0.0 \
+        --ajp13ListenAddress=127.0.0.1 \
+        --preferredClassLoader=java.net.URLClassLoader \
+        --logfile=../jenkins.log \
+        -Xdebug \
+        -Xrunjdwp:"$JVM_DEBUG"
+
+fi
+echo "Jenkins is running"

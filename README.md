@@ -10,9 +10,9 @@ git clone https://github.com/XiaokunHou/jenkins-standalone
 && python customize.py appname haproxy_ip username password 
 && ./jenkins-standalone.sh -z $(cat /etc/mesos/zk) -r localhost
 ```
-Copy backups form sharefolder,
+Copy backups from sharefolder,
 ```
-./fetch-baks.sh username password ip folder
+./fetch-baks.sh folder ip username password
 ```
 username&password: Used to access share folder.
 
@@ -27,10 +27,15 @@ appname: Application name
 haproxy_ip: ip info for haproxy machine
 
 username&password: used to access haproxy machine.
+
+**Haproxy is deprecated, Mesos DNS is the new solution.**
+
 ## Usage
-`jenkins-standalone.sh` takes two arguments:
-  - ZooKeeper URL
-  - Redis host
+`jenkins-standalone.sh` takes three arguments:
+
+  - ZooKeeper URL (-z)
+  - Redis host(-r)
+  - JVM remote debug option (-dbg)
 
 Redis is used as the broker for Logstash and the Jenkins Logstash plugin.
 
@@ -42,11 +47,11 @@ Example usage:
 ```
 git clone https://github.com/rji/jenkins-standalone
 cd jenkins-standalone
-./jenkins-standalone.sh -z $(cat /etc/mesos/zk) -r redis.example.com
+./jenkins-standalone.sh -z $(cat /etc/mesos/zk) -r redis.example.com -dbg transport=dt_socket,server=y,address=8000,suspend=n
 ```
 
 You can also use the Marathon API to create apps. There is an example
-`jenkins-standalone.json` in the `examples/` directory .
+`jenkins-standalone.json` in the `examples/` directory.
 
 ```
 curl -i -H 'Content-Type: application/json' -d @jenkins-standalone.json marathon.example.com:8080/v2/apps

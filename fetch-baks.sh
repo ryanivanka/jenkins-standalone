@@ -1,42 +1,75 @@
 #!/bin/bash
-#mount backups first.
+#---------Initialize arguments---------
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-rootPath="/JenkinsBackups"
-#username=$1
-#password=$2
-#ip=$3
-#where to backup
-location=$1
-#location=$4
-if [ ! -e $rootPath ]; then
-        mkdir /JenkinsBackups
-fi
+rootPath="JenkinsBackups"
+sourcePath="JenkinsShare"
 
-if grep -qs $rootPath /proc/mounts; then
-#        umount -l $rootPath
-         echo "no need to mount..."
-else
-         # all backus are stored in docker-registry
-         mount docker-registry1:/JenkinsShare /JenkinsBackups
-         #mount -t cifs -o username=$username,password=$password,domain=corp "//"$ip"/JenkinsShare" /JenkinsBackups
-fi
-
-#copy the backups
-for file in $(ls "/JenkinsBackups/"$location  -t)
-do
-    backupLocation="/JenkinsBackups/"$location/$file
-    if [ -d $backupLocation ];then
-                if [[ ${file:0:4} == "FULL" ]];then
-                        echo $file
-                        for f in $(ls $backupLocation)
-                        do
-                            \cp -rf "$backupLocation/$f" .
-                        done
-                        #\cp -rf $backupLocation/* .
-                        break
-                fi
-    fi
+while [[ $# > 1 ]]; do
+    key="$1"
+    shift
+    case $key in
+        -lc|--location)
+            location="$1"
+            echo "Get required location=$1"
+            shift
+            ;;
+        -ip|--ip-address)
+            ip="$1"
+            echo "Get ip=$1"
+            shift
+            ;;
+        -u|--username)
+            username="$1"
+            echo "Get username=$1"
+            shift
+            ;;
+        -p|--password)
+            password="$1"
+            echo "Get password"
+            shift
+            ;;
+        -src|--sourcePath)
+            sourcePath="$1"
+            echo "Get sourcePath=$1"
+            shift
+            ;;
+        -h|--home)
+            rootPath="$1"
+            echo "Get rootPath=$1"
+            shift
+            ;;
+        *)
+            echo "Unknown option: ${key}"
+            exit 1
+            ;;
+    esac
 done
-echo "restore is done..."
+
+
+#---------mount Jenkinsbackup folder from sharefolder--------
+if [[ ! -d "/$rootPath" ]]; then
+        echo "make rootPath directory"
+        mkdir /"$rootPath"
+fi
+
+echo "fetch backup"
+if grep -qs "/$rootPath" /proc/mounts; then
+         echo "no need to mount..."
+elif [[ -z "$ip" ]]; then
+        echo "mount JenkinsBackups from default machine: docker-registry1:/$sourcePath /$rootPath"
+        mount docker-registry1:/"$sourcePath" /"$rootPath"
+        echo "mount success"
+else
+        echo "mount JenkinsBackups from ip user provide: mount -t cifs -o username=$username,domain=corp $ip/$sourcePath /$rootPath"
+        mount -t cifs -o username="$username",password="$password",domain=corp //"$ip"/"$sourcePath" /"$rootPath"
+        echo "mount success"
+fi
+
+
+#---------restore the backups------
+echo "start restore /$rootPath/$location/Full*/* ."
+cp -rf /"$rootPath"/"$location"/FULL*/* .
+echo "restore success"
+
 IFS=$SAVEIFS

@@ -1,4 +1,4 @@
-<h1>How to use Haproxy</h1>
+<h1>[@Deprecated]How to use Haproxy</h1>
 Marathon ships with a simple shell script called haproxy_marathon_bridge that turns the Marathon's REST API's list of running tasks into a config file for HAProxy, a lightweight TCP/HTTP proxy. To generate an HAProxy configuration from Marathon running at localhost:8080, use the haproxy_marathon_bridge script:
 
     $ bin/haproxy-marathon-bridge localhost:8080 > haproxy.cfg
